@@ -18,6 +18,9 @@ spec:
       {{- end }}
       labels:
         {{- include "maildev.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -63,9 +66,10 @@ spec:
             value: "{{ .Values.ports.smtp }}"
           - name: MAILDEV_WEB_PORT
             value: "{{ .Values.ports.web }}"
-          - name: MAILDEV_HTTPS
-            value: "{{ .Values.https.enabled }}"
+          {{- /* MailDev >= 3.0 treats any MAILDEV_HTTPS value, even "false", as enabled */}}
           {{- if .Values.https.enabled }}
+          - name: MAILDEV_HTTPS
+            value: "true"
           - name: MAILDEV_HTTPS_KEY
             value: "{{ .Values.https.key }}"
           - name: MAILDEV_HTTPS_CERT
@@ -95,20 +99,37 @@ spec:
             value: "{{ .Values.outgoingRelay.autoRelay.receiver }}"
           {{- end }}
           {{- end }}
-          {{- if .Values.incoming }}
+          {{- if .Values.incoming.user }}
           - name: MAILDEV_INCOMING_USER
             value: "{{ .Values.incoming.user }}"
           - name: MAILDEV_INCOMING_PASS
             value:  "{{ .Values.incoming.pass }}"
           {{- end }}
+          {{- if not .Values.web.disable }}
           livenessProbe:
             httpGet:
-              path: /healthz
-              port: {{ .Values.ports.web }}
+              path: {{ .Values.probes.path }}
+              port: web-port
+              scheme: {{ ternary "HTTPS" "HTTP" .Values.https.enabled }}
+            {{- with .Values.probes.liveness }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           readinessProbe:
             httpGet:
-              path: /healthz
-              port: {{ .Values.ports.web }}
+              path: {{ .Values.probes.path }}
+              port: web-port
+              scheme: {{ ternary "HTTPS" "HTTP" .Values.https.enabled }}
+            {{- with .Values.probes.readiness }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- else }}
+          livenessProbe:
+            tcpSocket:
+              port: smtp-port
+          readinessProbe:
+            tcpSocket:
+              port: smtp-port
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 {{- if .Values.outgoingRelay.autoRelay.enabled }}

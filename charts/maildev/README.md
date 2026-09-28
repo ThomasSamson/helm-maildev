@@ -5,12 +5,27 @@ This helm-chart installs [MailDev](https://github.com/maildev/maildev).
 Its mainl usage is to provide you with a SMTP relay service inside Kubernetes,
 so other apps can rely on it to send mails externally.
 
-Inside the Namespace where it is deployed, an SMTP service is available: `maildev-smtp:1025`.
+Inside the Namespace where it is deployed, an SMTP service is available: `<release>-maildev:1025`.
 
 MailDev also provides a Web interface, it can be disabled/enabled at discretion.
 
 Also note that mails do not persist after reboot. Everytime MailDev starts, it starts from scratch,
 even if the `/tmp/maildev` folder, where MailDev stores mails, is persisted.
+
+## Exposing the web interface
+
+Either with an `Ingress` (`ingress.*`) or a Gateway API `HTTPRoute` (`httpRoute.*`):
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: traefik
+      namespace: infra-traefik
+      sectionName: https
+  hostnames:
+    - maildev.example.com
+```
 
 ## Sources code
 
@@ -45,6 +60,12 @@ Not listing here the more general paramaters such as tolerations, nodeSelectors,
 | **https.cert**                | The file path to the ssl cert file, `MAILDEV_HTTPS_CERT`.                                         |                                             |
 | **incoming.user**             | SMTP user for incoming emails, `MAILDEV_INCOMING_USER`.                                           |                                             |
 | **incoming.pass**             | SMTP password for incoming emails, `MAILDEV_INCOMING_PASS`.                                       |                                             |
+| **probes.path**               | HTTP path of the liveness/readiness probes (`/api/healthz` for MailDev >= 3.0).                  | `/healthz`                                  |
+| **httpRoute.enabled**         | Create a Gateway API `HTTPRoute` for the web interface (requires the Gateway API CRDs).          | `false`                                     |
+| **httpRoute.parentRefs**      | Gateway(s) the route attaches to.                                                                 | `[]`                                        |
+| **httpRoute.hostnames**       | Hostnames served by the route (templated).                                                        | `[]`                                        |
+| **httpRoute.matches**         | Route matches.                                                                                    | `PathPrefix /`                              |
+| **httpRoute.filters**         | Route filters (e.g. `ResponseHeaderModifier`).                                                    | `[]`                                        |
 
 ## Test it
 

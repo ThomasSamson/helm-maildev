@@ -1,7 +1,8 @@
 apiVersion: v2
 name: maildev
-version: 0.3.1
-appVersion: 2.0.0-beta3
+version: 0.4.0
+appVersion: 2.2.1
+kubeVersion: ">=1.19.0-0"
 type: application
 description: SMTP Server + Web Interface for viewing and testing emails during development.
 keywords:
@@ -14,10 +15,13 @@ keywords:
 - development
 - developer-tools
 - nodejs
-home: https://pando85.github.io/helm-maildev/
+home: https://thomassamson.github.io/helm-maildev/
 icon: https://avatars1.githubusercontent.com/u/26743469
 sources:
-- https://github.com/pando85/helm-maildev
+- https://github.com/ThomasSamson/helm-maildev
+- https://github.com/maildev/maildev
 maintainers:
+- name: ThomasSamson
+  url: https://github.com/ThomasSamson
 - name: pando85
   email: pando85@users.noreply.github.com

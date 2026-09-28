@@ -1,7 +1,7 @@
 {{- if contains "ClusterIP" .Values.service.type }}
 
-  echo http://127.0.0.1:1080/
-  kubectl port-forward $(kubectl get pod -l "app.kubernetes.io/instance=maildev" -o name) 1080:1080
+  echo http://127.0.0.1:{{ .Values.ports.web }}/
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "maildev.fullname" . }} {{ .Values.ports.web }}:{{ .Values.ports.web }}
 
 {{- else }}
 
@@ -13,6 +13,13 @@
 
   From outside the cluster, the server URL(s) are:
 {{- range .Values.ingress.hosts }}
-    http://{{ . }}
+    http{{ if $.Values.ingress.tls }}s{{ end }}://{{ tpl . $ }}
+{{- end }}
+{{- end }}
+{{- if .Values.httpRoute.enabled }}
+
+  From outside the cluster (Gateway API HTTPRoute), the server URL(s) are:
+{{- range .Values.httpRoute.hostnames }}
+    https://{{ tpl . $ }}
 {{- end }}
 {{- end }}

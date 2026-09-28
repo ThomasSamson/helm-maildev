@@ -4,7 +4,7 @@ image:
   repository: maildev/maildev
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2.0.0-beta3
+  tag: ""
 
 verbose: false
 
@@ -68,6 +68,8 @@ serviceAccount:
 
 podAnnotations: {}
 
+podLabels: {}
+
 podSecurityContext: {}
   # fsGroup: 2000
 
@@ -81,6 +83,15 @@ securityContext: {}
 
 service:
   type: ClusterIP
+
+# Probes on the web port. MailDev >= 3.0 serves the health endpoint on /api/healthz.
+probes:
+  path: /healthz
+  liveness: {}
+    # initialDelaySeconds: 5
+    # periodSeconds: 10
+  readiness: {}
+    # periodSeconds: 5
 
 ingress:
   enabled: false
@@ -119,6 +130,30 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+# Gateway API HTTPRoute exposing the web interface (requires the Gateway API CRDs).
+# TLS is terminated by the Gateway referenced in parentRefs.
+httpRoute:
+  enabled: false
+  annotations: {}
+  labels: {}
+  parentRefs: []
+  # - name: my-gateway
+  #   namespace: gateway-namespace
+  #   sectionName: https
+  # Values can be templated
+  hostnames: []
+  # - maildev.example.com
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+  filters: []
+  # - type: ResponseHeaderModifier
+  #   responseHeaderModifier:
+  #     set:
+  #       - name: Strict-Transport-Security
+  #         value: max-age=31536000
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
