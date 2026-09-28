@@ -1,7 +1,7 @@
 apiVersion: v2
 name: maildev
-version: 0.4.0
-appVersion: 2.2.1
+version: 0.5.0
+appVersion: 3.0.0
 kubeVersion: ">=1.19.0-0"
 type: application
 description: SMTP Server + Web Interface for viewing and testing emails during development.

@@ -52,6 +52,24 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Health endpoint of the web interface: /api/healthz since MailDev 3.0, /healthz before.
+Non-semver tags (e.g. latest) are considered >= 3.0.
+*/}}
+{{- define "maildev.probePath" -}}
+{{- if .Values.probes.path -}}
+{{- .Values.probes.path -}}
+{{- else -}}
+{{- $tag := .Values.image.tag | default .Chart.AppVersion | toString | trimPrefix "v" -}}
+{{- $semver := regexFind "^[0-9]+\\.[0-9]+\\.[0-9]+" $tag -}}
+{{- if and $semver (semverCompare "<3.0.0" $semver) -}}
+/healthz
+{{- else -}}
+/api/healthz
+{{- end -}}
+{{- end -}}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "maildev.serviceAccountName" -}}

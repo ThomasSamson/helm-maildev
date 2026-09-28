@@ -84,9 +84,10 @@ securityContext: {}
 service:
   type: ClusterIP
 
-# Probes on the web port. MailDev >= 3.0 serves the health endpoint on /api/healthz.
+# Probes on the web port. Empty path: /api/healthz for MailDev >= 3.0 (image.tag or appVersion),
+# /healthz before.
 probes:
-  path: /healthz
+  path: ""
   liveness: {}
     # initialDelaySeconds: 5
     # periodSeconds: 10

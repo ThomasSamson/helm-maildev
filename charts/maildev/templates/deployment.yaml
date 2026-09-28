@@ -108,7 +108,7 @@ spec:
           {{- if not .Values.web.disable }}
           livenessProbe:
             httpGet:
-              path: {{ .Values.probes.path }}
+              path: {{ include "maildev.probePath" . }}
               port: web-port
               scheme: {{ ternary "HTTPS" "HTTP" .Values.https.enabled }}
             {{- with .Values.probes.liveness }}
@@ -116,7 +116,7 @@ spec:
             {{- end }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.probes.path }}
+              path: {{ include "maildev.probePath" . }}
               port: web-port
               scheme: {{ ternary "HTTPS" "HTTP" .Values.https.enabled }}
             {{- with .Values.probes.readiness }}

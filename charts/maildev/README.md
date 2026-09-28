@@ -60,7 +60,7 @@ Not listing here the more general paramaters such as tolerations, nodeSelectors,
 | **https.cert**                | The file path to the ssl cert file, `MAILDEV_HTTPS_CERT`.                                         |                                             |
 | **incoming.user**             | SMTP user for incoming emails, `MAILDEV_INCOMING_USER`.                                           |                                             |
 | **incoming.pass**             | SMTP password for incoming emails, `MAILDEV_INCOMING_PASS`.                                       |                                             |
-| **probes.path**               | HTTP path of the liveness/readiness probes (`/api/healthz` for MailDev >= 3.0).                  | `/healthz`                                  |
+| **probes.path**               | HTTP path of the liveness/readiness probes. Empty: `/api/healthz` for MailDev >= 3.0, `/healthz` before. | `""`                                   |
 | **httpRoute.enabled**         | Create a Gateway API `HTTPRoute` for the web interface (requires the Gateway API CRDs).          | `false`                                     |
 | **httpRoute.parentRefs**      | Gateway(s) the route attaches to.                                                                 | `[]`                                        |
 | **httpRoute.hostnames**       | Hostnames served by the route (templated).                                                        | `[]`                                        |
