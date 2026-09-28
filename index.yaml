@@ -2,8 +2,40 @@ apiVersion: v1
 entries:
   maildev:
   - apiVersion: v2
+    appVersion: 3.0.0
+    created: "2026-09-28T16:23:45.581840931+02:00"
+    description: SMTP Server + Web Interface for viewing and testing emails during
+      development.
+    digest: 40de4b15da8553180972d65d218180e6fb3d753755e5413894d8711b8cf9f932
+    home: https://thomassamson.github.io/helm-maildev/
+    icon: https://avatars1.githubusercontent.com/u/26743469
+    keywords:
+    - maildev
+    - smtp
+    - nodemailer
+    - smtp-server
+    - mailcatcher
+    - testing
+    - development
+    - developer-tools
+    - nodejs
+    kubeVersion: '>=1.19.0-0'
+    maintainers:
+    - name: ThomasSamson
+      url: https://github.com/ThomasSamson
+    - email: pando85@users.noreply.github.com
+      name: pando85
+    name: maildev
+    sources:
+    - https://github.com/ThomasSamson/helm-maildev
+    - https://github.com/maildev/maildev
+    type: application
+    urls:
+    - https://thomassamson.github.io/helm-maildev/maildev-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
     appVersion: 2.2.1
-    created: "2026-09-28T15:48:18.485328487+02:00"
+    created: "2026-09-28T16:23:45.581455867+02:00"
     description: SMTP Server + Web Interface for viewing and testing emails during
       development.
     digest: b91c02286f4c056fddc289c1d72ca93544cb08a9fa04d9fa6a9c8154e47b76b1
@@ -33,4 +65,4 @@ entries:
     urls:
     - https://thomassamson.github.io/helm-maildev/maildev-0.4.0.tgz
     version: 0.4.0
-generated: "2026-09-28T15:48:18.484840972+02:00"
+generated: "2026-09-28T16:23:45.580907704+02:00"
